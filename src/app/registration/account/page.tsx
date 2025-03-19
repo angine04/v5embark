@@ -1,0 +1,75 @@
+'use client'
+
+import { RegistrationLayout } from '@/components/layout/RegistrationLayout'
+import { useInitialFormStore, useBasicInfoStore, useContactStore, usePersonalInfoStore, useGlobalStore } from '@/store/registration'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { AccountForm } from '@/components/forms/AccountForm'
+
+export default function AccountPage() {
+  const { formData: initialFormData } = useInitialFormStore()
+  const { formData: basicInfoData } = useBasicInfoStore()
+  const { formData: contactData } = useContactStore()
+  const { formData: personalInfoData } = usePersonalInfoStore()
+  const { currentStep } = useGlobalStore()
+  const router = useRouter()
+
+  useEffect(() => {
+    console.log('Account Page - Initial Form Data:', initialFormData)
+    console.log('Account Page - Basic Info Data:', basicInfoData)
+    console.log('Account Page - Contact Data:', contactData)
+    console.log('Account Page - Personal Info Data:', personalInfoData)
+    console.log('Account Page - Current Step:', currentStep)
+
+    // 如果没有初始信息，重定向到首页
+    if (!initialFormData.studentId || !initialFormData.name) {
+      console.log('Account Page - No initial info, redirecting to home')
+      router.push('/')
+      return
+    }
+
+    // 如果没有基本信息，重定向到基本信息页面
+    if (!basicInfoData.year || !basicInfoData.gender || !basicInfoData.college || !basicInfoData.major || !basicInfoData.techGroup) {
+      console.log('Account Page - No basic info, redirecting to registration')
+      router.push('/registration')
+      return
+    }
+
+    // 如果没有联系方式，重定向到联系方式页面
+    if (!contactData.phone || !contactData.email || !contactData.qq) {
+      console.log('Account Page - No contact info, redirecting to contact')
+      router.push('/registration/contact')
+      return
+    }
+
+    // 如果没有个人信息，重定向到个人信息页面
+    if (!personalInfoData.idCard || !personalInfoData.birthday || !personalInfoData.hometown || 
+        !personalInfoData.currentResidence || !personalInfoData.ethnicity || !personalInfoData.highSchool) {
+      console.log('Account Page - No personal info, redirecting to personal')
+      router.push('/registration/experience')
+      return
+    }
+
+    // 如果当前步骤小于3，重定向到个人信息页面
+    if (currentStep < 3) {
+      console.log('Account Page - Current step < 3, redirecting to personal')
+      router.push('/registration/experience')
+      return
+    }
+  }, [initialFormData, basicInfoData, contactData, personalInfoData, currentStep, router])
+
+  return (
+    <RegistrationLayout
+      instructions={
+        <div className="space-y-2 md:space-y-4">
+          <h1 className="text-2xl md:text-4xl font-bold text-gray-900">账号设置</h1>
+          <p className="text-base md:text-xl text-gray-600">
+            请设置您的登录账号和密码
+          </p>
+        </div>
+      }
+    >
+      <AccountForm />
+    </RegistrationLayout>
+  )
+} 
