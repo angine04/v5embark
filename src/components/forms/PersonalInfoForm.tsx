@@ -3,7 +3,7 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { usePersonalInfoStore, useGlobalStore, useInitialFormStore, useBasicInfoStore, useContactStore } from '@/store/registration'
+import { usePersonalInfoStore, useGlobalStore } from '@/store/registration'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -36,12 +36,8 @@ type PersonalInfoFormData = z.infer<typeof personalInfoSchema>
 export function PersonalInfoForm() {
   const { formData, setFormData, resetForm } = usePersonalInfoStore()
   const { setCurrentStep } = useGlobalStore()
-  const { formData: initialFormData } = useInitialFormStore()
-  const { formData: basicInfoData } = useBasicInfoStore()
-  const { formData: contactData } = useContactStore()
   const router = useRouter()
   const [error, setError] = useState<string>('')
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
   const {
     register,
@@ -62,57 +58,13 @@ export function PersonalInfoForm() {
 
   const onSubmit = async (data: PersonalInfoFormData) => {
     try {
-      console.log('PersonalInfoForm - Submitting data:', data)
+      console.log('PersonalInfoForm - Saving data:', data)
       setFormData(data)
-      setIsSubmitting(true)
-      
-      // 构造完整的注册数据
-      const registrationData = {
-        studentId: initialFormData.studentId,
-        name: initialFormData.name,
-        basicInfo: {
-          year: basicInfoData.year,
-          gender: basicInfoData.gender,
-          college: basicInfoData.college,
-          major: basicInfoData.major,
-          techGroup: basicInfoData.techGroup
-        },
-        contact: {
-          phone: contactData.phone,
-          email: contactData.email,
-          qq: contactData.qq
-        },
-        personalInfo: {
-          idCard: data.idCard,
-          birthday: data.birthday,
-          hometown: data.hometown,
-          currentResidence: data.currentResidence,
-          ethnicity: data.ethnicity,
-          dietaryRestrictions: data.dietaryRestrictions,
-          highSchool: data.highSchool
-        }
-      }
-      
-      // 提交注册数据
-      const response = await fetch('/api/registration', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(registrationData),
-      })
-      
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.error || '注册失败')
-      }
-      
-      setCurrentStep(3) // 完成注册
-      router.push('/registration/success')
+      setCurrentStep(3)
+      router.push('/registration/credentials')
     } catch (err) {
-      console.error('PersonalInfoForm - Submit error:', err)
-      setError(err instanceof Error ? err.message : '注册失败')
-      setIsSubmitting(false)
+      console.error('PersonalInfoForm - Error:', err)
+      setError(err instanceof Error ? err.message : '保存失败')
     }
   }
 
@@ -146,8 +98,10 @@ export function PersonalInfoForm() {
         <Input
           id="birthday"
           type="date"
+          max={new Date().toISOString().split('T')[0]}
+          min="1900-01-01"
           {...register('birthday')}
-          className={`h-11 text-base mt-2 ${errors.birthday ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+          className={`h-11 text-base mt-2 date-input ${errors.birthday ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
         />
         {errors.birthday && (
           <p className="text-sm text-red-500 mt-1">{errors.birthday.message}</p>
@@ -234,16 +188,14 @@ export function PersonalInfoForm() {
           variant="outline"
           className="flex-1 h-11 text-base text-gray-900"
           onClick={handlePrevStep}
-          disabled={isSubmitting}
         >
           上一步
         </Button>
         <Button 
           type="submit" 
           className="flex-1 h-11 text-base"
-          disabled={isSubmitting}
         >
-          {isSubmitting ? '提交中...' : '提交'}
+          下一步
         </Button>
       </div>
     </form>

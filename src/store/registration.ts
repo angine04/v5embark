@@ -65,6 +65,12 @@ interface PersonalInfoData {
   highSchool: string
 }
 
+// 用户凭据
+interface CredentialsData {
+  username: string
+  password: string
+}
+
 interface InitialFormStore {
   formData: InitialFormData
   setFormData: (data: InitialFormData) => void
@@ -86,6 +92,12 @@ interface ContactStore {
 interface PersonalInfoStore {
   formData: PersonalInfoData
   setFormData: (data: PersonalInfoData) => void
+  resetForm: () => void
+}
+
+interface CredentialsStore {
+  formData: CredentialsData
+  setFormData: (data: CredentialsData) => void
   resetForm: () => void
 }
 
@@ -194,6 +206,27 @@ export const usePersonalInfoStore = create<PersonalInfoStore>()(
   )
 )
 
+export const useCredentialsStore = create<CredentialsStore>()(
+  persist(
+    (set) => ({
+      formData: {
+        username: '',
+        password: '',
+      },
+      setFormData: (data) => set({ formData: data }),
+      resetForm: () => set({
+        formData: {
+          username: '',
+          password: '',
+        }
+      }),
+    }),
+    {
+      name: 'registration-credentials',
+    }
+  )
+)
+
 // 全局状态 store
 export const useGlobalStore = create<GlobalStore>()(
   persist(
@@ -205,6 +238,7 @@ export const useGlobalStore = create<GlobalStore>()(
         useBasicInfoStore.getState().resetForm()
         useContactStore.getState().resetForm()
         usePersonalInfoStore.getState().resetForm()
+        useCredentialsStore.getState().resetForm()
         set({ currentStep: 0 })
       },
     }),

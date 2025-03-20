@@ -1,12 +1,6 @@
 import type { Metadata } from "next";
-import { Lato } from "next/font/google";
 import "./globals.css";
-
-const lato = Lato({
-  weight: ['400', '700'],
-  subsets: ['latin'],
-  variable: '--font-lato',
-});
+import { lato } from "./fonts";
 
 export const metadata: Metadata = {
   title: '欢迎来到v5++ | v5Embark',

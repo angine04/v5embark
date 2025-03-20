@@ -27,8 +27,6 @@ export async function GET(request: Request) {
       completed,
       enrolled,
       name: enrolledStudent?.name,
-      username: enrolledStudent?.username,
-      initialPassword: enrolledStudent?.initialPassword,
       user: completed ? {
         studentId: existingUser?.studentId,
         name: existingUser?.name

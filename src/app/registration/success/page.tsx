@@ -1,19 +1,14 @@
 "use client";
 
 import { RegistrationLayout } from "@/components/layout/RegistrationLayout";
-import { useInitialFormStore } from "@/store/registration";
-import { useEffect, useState } from "react";
+import { useInitialFormStore, useCredentialsStore } from "@/store/registration";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-
-interface Credentials {
-  username: string;
-  initialPassword: string;
-}
 
 export default function SuccessPage() {
   const { formData: initialFormData } = useInitialFormStore();
+  const { formData: credentialsData } = useCredentialsStore();
   const router = useRouter();
-  const [credentials, setCredentials] = useState<Credentials | null>(null);
 
   useEffect(() => {
     // 如果没有初始信息，重定向到首页
@@ -21,26 +16,6 @@ export default function SuccessPage() {
       router.push("/");
       return;
     }
-
-    // 获取用户凭据
-    const fetchCredentials = async () => {
-      try {
-        const response = await fetch(
-          `/api/registration/check?studentId=${initialFormData.studentId}`
-        );
-        const data = await response.json();
-        if (data.enrolled && data.completed) {
-          setCredentials({
-            username: data.username,
-            initialPassword: data.initialPassword,
-          });
-        }
-      } catch (error) {
-        console.error("获取凭据失败:", error);
-      }
-    };
-
-    fetchCredentials();
   }, [initialFormData, router]);
 
   return (
@@ -54,7 +29,7 @@ export default function SuccessPage() {
             <p>您已成功完成注册！接下来：</p>
             <ol className="list-decimal list-inside space-y-2">
               <li>
-                &nbsp;使用凭据激活
+                &nbsp;使用您设置的账号密码登录
                 <a
                   href="https://key.npu5v5.cn"
                   target="_blank"
@@ -63,7 +38,6 @@ export default function SuccessPage() {
                 >
                   v5Key
                 </a>
-                账号，并更新密码
               </li>
               <li>
                 &nbsp;查看
@@ -128,35 +102,24 @@ export default function SuccessPage() {
           </div>
         </div>
         <div className="space-y-2">
-          {/* <p className="text-gray-600">姓名：{initialFormData.name}</p>
-          <p className="text-gray-600">学号：{initialFormData.studentId}</p> */}
-          {credentials && (
-            <>
-              <div className="mt-2 p-6 bg-green-50 rounded-lg border border-green-200">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  <a
-                    href="https://key.npu5v5.cn"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 hover:text-blue-700"
-                  >
-                    v5Key
-                  </a>
-                  登录凭据
-                </h3>
-                <p className="text-gray-600">用户名：{credentials.username}</p>
-                <p className="text-gray-600">
-                  初始密码：{credentials.initialPassword}
-                </p>
-                <p className="text-xs text-red-500 mt-2">
-                  请妥善保管您的登录信息，首次登录后请立即修改密码
-                </p>
-              </div>
-            </>
-          )}
-        </div>
-        <div className="text-sm text-gray-500">
-          <p>请保存此页面信息，并按照说明继续操作</p>
+          <div className="mt-2 p-6 bg-green-50 rounded-lg border border-green-200">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              您的账号信息
+            </h3>
+            <p className="text-gray-600">
+              <ul>
+              <li>
+                  姓名：{initialFormData.name}
+                </li>
+                <li>
+                  学号：{initialFormData.studentId}
+                </li>
+                <li>
+                  用户名：{credentialsData.username}
+                </li>
+            </ul>
+            </p>
+          </div>
         </div>
       </div>
     </RegistrationLayout>
