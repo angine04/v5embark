@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# V5Embark - 学生注册系统
 
-## Getting Started
+这是一个使用[Next.js](https://nextjs.org)构建的学生注册和信息管理系统。
 
-First, run the development server:
+## 项目概述
+
+V5Embark是一个专为学生设计的注册平台，允许学生填写和提交他们的个人信息、联系方式和经验信息。系统采用多步骤表单设计，确保用户体验流畅。
+
+## 技术栈
+
+- **前端框架**: [Next.js 15](https://nextjs.org) 使用App Router
+- **UI组件**: [Shadcn UI](https://ui.shadcn.com/)
+- **状态管理**: [Zustand](https://github.com/pmndrs/zustand)
+- **表单处理**: [React Hook Form](https://react-hook-form.com/) 和 [Zod](https://zod.dev/) 验证
+- **CSS框架**: [Tailwind CSS](https://tailwindcss.com/)
+- **动画**: [Framer Motion](https://www.framer.com/motion/)
+- **数据库**: [MongoDB](https://www.mongodb.com/) 通过Mongoose连接
+
+## 开始使用
+
+首先，安装依赖并运行开发服务器:
 
 ```bash
+# 安装依赖
+npm install
+# 或
+yarn install
+
+# 运行开发服务器
 npm run dev
-# or
+# 或
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+打开 [http://localhost:3000](http://localhost:3000) 在浏览器中查看应用。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 主要功能
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- 多步骤表单注册流程
+- 表单数据持久化
+- 响应式设计，适配不同设备
+- 服务器端验证
+- 数据库存储和检索
 
-## Learn More
+## 项目结构
 
-To learn more about Next.js, take a look at the following resources:
+```
+v5embark/
+├── src/               # 源代码
+│   ├── app/           # Next.js应用页面
+│   ├── components/    # 可复用组件
+│   ├── lib/           # 工具函数和配置
+│   ├── store/         # Zustand状态管理
+│   └── types/         # TypeScript类型定义
+├── public/            # 静态资源
+├── scripts/           # 脚本工具
+└── data/              # 数据文件
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 数据库设置
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+项目使用MongoDB作为数据库。为了运行项目，请确保您已配置`.env.local`文件中的连接字符串:
 
-## Deploy on Vercel
+```
+MONGODB_URI=your_mongodb_connection_string
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 部署
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+该项目可以部署到任何支持Next.js的平台，如[Vercel](https://vercel.com)。
+
+```bash
+npm run build
+# 或
+yarn build
+```
+
+更多部署信息，请参考[Next.js部署文档](https://nextjs.org/docs/app/building-your-application/deploying)。
