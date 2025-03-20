@@ -43,3 +43,7 @@ next-env.d.ts
 .cursor*
 
 venv
+
+ecosystem.config.js
+
+*.bundle

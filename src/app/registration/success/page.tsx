@@ -74,6 +74,9 @@ export default function SuccessPage() {
                   451279735
                 </a>
               </li>
+                <li>
+                  &nbsp;请于3月21日19:00到<b>计算机学院126</b>报到
+                </li>
             </ol>
           </div>
         </div>
@@ -106,8 +109,8 @@ export default function SuccessPage() {
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
               您的账号信息
             </h3>
-            <p className="text-gray-600">
-              <ul>
+
+              <ul className="text-gray-600">
               <li>
                   姓名：{initialFormData.name}
                 </li>
@@ -118,7 +121,7 @@ export default function SuccessPage() {
                   用户名：{credentialsData.username}
                 </li>
             </ul>
-            </p>
+
           </div>
         </div>
       </div>

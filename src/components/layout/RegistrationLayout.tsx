@@ -13,7 +13,7 @@ export function RegistrationLayout({ children, instructions }: RegistrationLayou
       {/* 移动端布局 */}
       <div className="flex flex-col min-h-screen md:hidden">
         <motion.div 
-          className="bg-white w-full h-[40vh] flex items-end relative overflow-hidden"
+          className="bg-white w-full min-h-[40vh] flex items-end relative overflow-hidden"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -37,7 +37,7 @@ export function RegistrationLayout({ children, instructions }: RegistrationLayou
             />
             <span className="text-xl text-gray-900">v5Embark</span>
           </div>
-          <div className="w-full flex justify-center px-6 pb-8 relative">
+          <div className="w-full pt-24 flex justify-center px-6 pb-8 relative">
             <div className="w-full max-w-md">
               <div className="flex items-center gap-4 mb-6">
                 <Image
@@ -71,7 +71,7 @@ export function RegistrationLayout({ children, instructions }: RegistrationLayou
       <div className="hidden md:flex h-screen">
         {/* 左侧说明面板 */}
         <motion.div 
-          className="w-1/2 flex items-center justify-center bg-white p-8 relative overflow-hidden"
+          className="w-3/5 flex items-center justify-center bg-white p-8 relative overflow-hidden"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
