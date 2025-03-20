@@ -1,4 +1,7 @@
-# v5Embark - 学生注册系统
+<center>
+<img src="https://github.com/user-attachments/assets/3687ac3f-0145-4104-8366-67939dc4756f" style="height:128px; margin:24px;"/>
+<h1>v5Embark</h1>
+</center>
 
 ## 项目概述
 
