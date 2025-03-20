@@ -16,6 +16,14 @@ export default function SuccessPage() {
       router.push("/");
       return;
     }
+
+    // 清除所有注册相关的本地存储
+    localStorage.removeItem('registration-initial');
+    localStorage.removeItem('registration-basic');
+    localStorage.removeItem('registration-contact');
+    localStorage.removeItem('registration-personal');
+    localStorage.removeItem('registration-credentials');
+    localStorage.removeItem('registration-global');
   }, [initialFormData, router]);
 
   return (
