@@ -28,10 +28,6 @@ export interface RegistrationForm {
   dietaryRestrictions: string
   highSchool: string
   
-  // 账号信息
-  username: string
-  password: string
-  
   // 系统信息
   joinDate: string
 }
@@ -69,12 +65,6 @@ interface PersonalInfoData {
   highSchool: string
 }
 
-// 账号信息
-interface AccountData {
-  username: string
-  password: string
-}
-
 interface InitialFormStore {
   formData: InitialFormData
   setFormData: (data: InitialFormData) => void
@@ -96,12 +86,6 @@ interface ContactStore {
 interface PersonalInfoStore {
   formData: PersonalInfoData
   setFormData: (data: PersonalInfoData) => void
-  resetForm: () => void
-}
-
-interface AccountStore {
-  formData: AccountData
-  setFormData: (data: AccountData) => void
   resetForm: () => void
 }
 
@@ -210,27 +194,6 @@ export const usePersonalInfoStore = create<PersonalInfoStore>()(
   )
 )
 
-export const useAccountStore = create<AccountStore>()(
-  persist(
-    (set) => ({
-      formData: {
-        username: '',
-        password: '',
-      },
-      setFormData: (data) => set({ formData: data }),
-      resetForm: () => set({
-        formData: {
-          username: '',
-          password: '',
-        }
-      }),
-    }),
-    {
-      name: 'registration-account',
-    }
-  )
-)
-
 // 全局状态 store
 export const useGlobalStore = create<GlobalStore>()(
   persist(
@@ -242,7 +205,6 @@ export const useGlobalStore = create<GlobalStore>()(
         useBasicInfoStore.getState().resetForm()
         useContactStore.getState().resetForm()
         usePersonalInfoStore.getState().resetForm()
-        useAccountStore.getState().resetForm()
         set({ currentStep: 0 })
       },
     }),

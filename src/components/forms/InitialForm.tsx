@@ -12,9 +12,9 @@ import { useState } from 'react'
 
 const initialSchema = z.object({
   studentId: z.string()
-    .min(7, '请输入正确的学号')
-    .max(7, '请输入正确的学号')
-    .regex(/^\d{7}$/, '请输入正确的学号'),
+    .min(10, '请输入正确的学号')
+    .max(10, '请输入正确的学号')
+    .regex(/^\d{10}$/, '请输入正确的学号'),
   name: z.string().min(1, '请输入姓名'),
 })
 
@@ -40,13 +40,58 @@ export function InitialForm() {
 
   const onSubmit = async (data: InitialFormData) => {
     try {
-      console.log('InitialForm - Submitting data:', data)
+      console.log('Checking registration status for:', data.studentId)
+      
+      const response = await fetch(`/api/registration/check?studentId=${data.studentId}`)
+      console.log('API response status:', response.status)
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        console.error('API error:', errorData)
+        throw new Error(errorData.error || '验证失败')
+      }
+
+      const result = await response.json()
+      console.log('API result:', result)
+
+      if (result.completed) {
+        console.log('Registration already completed')
+        // 清除所有 localStorage 数据
+        localStorage.removeItem('registration-initial')
+        localStorage.removeItem('registration-basic')
+        localStorage.removeItem('registration-contact')
+        localStorage.removeItem('registration-personal')
+        localStorage.removeItem('registration-account')
+        localStorage.removeItem('registration-global')
+        
+        // 设置用户数据并跳转到成功页面
+        setFormData({
+          studentId: result.user.studentId,
+          name: result.user.name
+        })
+        router.push('/registration/success')
+        return
+      }
+
+      if (!result.enrolled) {
+        console.log('Student not enrolled')
+        setError('您不在录取名单中')
+        return
+      }
+
+      if (data.name !== result.name) {
+        console.log('Name mismatch')
+        setError('姓名与录取信息不符')
+        return
+      }
+
+      console.log('Proceeding with registration')
       setFormData(data)
       setCurrentStep(1)
       router.push('/registration')
     } catch (err) {
-      console.error('InitialForm - Submit error:', err)
-      setError(err instanceof Error ? err.message : '保存失败')
+      console.error('Form submission error:', err)
+      setError(err instanceof Error ? err.message : '验证失败，请稍后重试')
     }
   }
 
@@ -63,6 +108,9 @@ export function InitialForm() {
           placeholder="请输入您的学号"
           className={`h-11 text-base mt-2 ${errors.studentId ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
         />
+        {errors.studentId && (
+          <p className="text-sm text-red-500 mt-1">{errors.studentId.message}</p>
+        )}
       </div>
 
       <div className="h-[76px]">
@@ -74,6 +122,9 @@ export function InitialForm() {
           placeholder="请输入您的姓名"
           className={`h-11 text-base mt-2 ${errors.name ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
         />
+        {errors.name && (
+          <p className="text-sm text-red-500 mt-1">{errors.name.message}</p>
+        )}
       </div>
 
       {error && (

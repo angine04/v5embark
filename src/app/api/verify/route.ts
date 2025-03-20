@@ -1,8 +1,11 @@
 import { NextResponse } from 'next/server'
-import enrolledData from '@/data/enrolled.json'
+import dbConnect from '@/lib/db'
+import EnrolledStudent from '@/models/EnrolledStudent'
+import User from '@/models/User'
 
 export async function POST(request: Request) {
   try {
+    await dbConnect()
     const { studentId } = await request.json()
 
     if (!studentId) {
@@ -13,23 +16,29 @@ export async function POST(request: Request) {
     }
 
     // 检查是否在已录取名单中
-    if (!enrolledData.enrolled.includes(studentId)) {
+    const enrolledStudent = await EnrolledStudent.findOne({ studentId })
+    if (!enrolledStudent) {
       return NextResponse.json(
-        { error: '您不在已录取名单中' },
+        { error: '您不在录取名单中' },
         { status: 403 }
       )
     }
 
     // 检查是否已经注册
-    if (enrolledData.registered.includes(studentId)) {
+    const existingUser = await User.findOne({ studentId })
+    if (existingUser) {
       return NextResponse.json(
         { error: '您已经注册过了' },
         { status: 409 }
       )
     }
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ 
+      success: true,
+      name: enrolledStudent.name
+    })
   } catch (error) {
+    console.error('Verify API error:', error)
     return NextResponse.json(
       { error: '服务器错误' },
       { status: 500 }
